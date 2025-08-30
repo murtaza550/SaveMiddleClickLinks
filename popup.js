@@ -8,13 +8,13 @@ const exportArea = document.getElementById('exportArea');
 function update() {
   chrome.storage.local.get({ savedUrls: [] }, ({ savedUrls }) => {
     countEl.textContent = String(savedUrls.length);
-    exportArea.value = savedUrls.join('\n');
+    exportArea.value = savedUrls.join('\n'); // correct new line separation
   });
 }
 
 downloadBtn.addEventListener('click', async () => {
   chrome.storage.local.get({ savedUrls: [] }, async ({ savedUrls }) => {
-    const text = savedUrls.join('\\n');
+    const text = savedUrls.join('\n');  // FIXED: use "\n", not "\\n"
     const blob = new Blob([text], { type: 'text/plain' });
     const objectUrl = URL.createObjectURL(blob);
     chrome.downloads.download({
@@ -27,7 +27,7 @@ downloadBtn.addEventListener('click', async () => {
 
 copyBtn.addEventListener('click', async () => {
   chrome.storage.local.get({ savedUrls: [] }, async ({ savedUrls }) => {
-    const text = savedUrls.join('\\n');
+    const text = savedUrls.join('\n');
     try {
       await navigator.clipboard.writeText(text);
       copyBtn.textContent = "Copied!";
